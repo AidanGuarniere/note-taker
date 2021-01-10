@@ -1,6 +1,7 @@
 // requirements
-const express = require("express");
+const fs = require('fs');
 const path = require("path");
+const express = require("express");
 const PORT = process.env.PORT || 3002;
 const app = express();
 
@@ -26,13 +27,24 @@ function filterByQuery(query, notesArray) {
   return filteredResults;
 }
 
-// filter by param
+// filter by param (id)
 function findById(id, notesArray) {
   const result = notesArray.filter((note) => note.id === id)[0];
   return result;
 }
 
-// get notes.json through query
+// create new note in notes.json
+function createNewNote(body, notesArray) {
+    const note = body;
+    notesArray.push(note);
+    fs.writeFileSync(
+        path.join(__dirname, './db/notes.json'),
+        JSON.stringify({notes: notesArray}, null, 2)
+    );
+    return note;
+  }
+
+// GET notes.json through query
 app.get("/api/notes", (req, res) => {
   let results = notes;
   if (req.query) {
@@ -41,7 +53,7 @@ app.get("/api/notes", (req, res) => {
   res.json(results);
 });
 
-// get notes.json through param (id), 404 if not found
+// GET notes.json through param (id), 404 if not found
 app.get("/api/notes/:id", (req, res) => {
   const result = findById(req.params.id, notes);
   if (result) {
@@ -51,10 +63,13 @@ app.get("/api/notes/:id", (req, res) => {
   }
 });
 
-// post notes.json 
+// POST notes.json 
 app.post('/api/notes', (req, res) => {
-    console.log(req.body);
-    res.json(req.body);
+    req.body.id = notes.length.toString();
+
+    const note = createNewNote(req.body, notes);
+
+    res.json(note);
   });
 
 // // serve to index.html
