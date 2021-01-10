@@ -32,7 +32,7 @@ function findById(id, notesArray) {
   return result;
 }
 
-// route to notes.json through query
+// get notes.json through query
 app.get("/api/notes", (req, res) => {
   let results = notes;
   if (req.query) {
@@ -41,7 +41,7 @@ app.get("/api/notes", (req, res) => {
   res.json(results);
 });
 
-// route to notes.json through param (id), 404 if not found
+// get notes.json through param (id), 404 if not found
 app.get("/api/notes/:id", (req, res) => {
   const result = findById(req.params.id, notes);
   if (result) {
@@ -50,6 +50,12 @@ app.get("/api/notes/:id", (req, res) => {
     res.status(404).send(" Note not found!");
   }
 });
+
+// post notes.json 
+app.post('/api/notes', (req, res) => {
+    console.log(req.body);
+    res.json(req.body);
+  });
 
 // // serve to index.html
 // app.get("/", (req, res) => {
