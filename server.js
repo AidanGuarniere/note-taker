@@ -1,5 +1,5 @@
 // requirements
-const fs = require('fs');
+const fs = require("fs");
 const path = require("path");
 const express = require("express");
 const PORT = process.env.PORT || 3002;
@@ -35,14 +35,25 @@ function findById(id, notesArray) {
 
 // create new note in notes.json
 function createNewNote(body, notesArray) {
-    const note = body;
-    notesArray.push(note);
-    fs.writeFileSync(
-        path.join(__dirname, './db/notes.json'),
-        JSON.stringify({notes: notesArray}, null, 2)
-    );
-    return note;
+  const note = body;
+  notesArray.push(note);
+  fs.writeFileSync(
+    path.join(__dirname, "./db/notes.json"),
+    JSON.stringify({ notes: notesArray }, null, 2)
+  );
+  return note;
+}
+
+// validate new note
+function validateNote(note) {
+  if (!note.title || typeof note.title !== "string") {
+    return false;
   }
+  if (!note.text || typeof note.text !== "string") {
+    return false;
+  }
+  return true;
+}
 
 // GET notes.json through query
 app.get("/api/notes", (req, res) => {
@@ -63,14 +74,17 @@ app.get("/api/notes/:id", (req, res) => {
   }
 });
 
-// POST notes.json 
-app.post('/api/notes', (req, res) => {
-    req.body.id = notes.length.toString();
+// POST notes.json
+app.post("/api/notes", (req, res) => {
+  req.body.id = notes.length.toString();
 
+  if (!validateNote(req.body)) {
+    res.status(400).send('The note is not properly formatted.');
+  } else {
     const note = createNewNote(req.body, notes);
-
     res.json(note);
-  });
+  }
+});
 
 // // serve to index.html
 // app.get("/", (req, res) => {
