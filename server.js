@@ -8,36 +8,55 @@ app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-const { notes } = require('./db/notes.json')
+const { notes } = require("./db/notes.json");
 
 // filter by query
 function filterByQuery(query, notesArray) {
-    let filteredResults = notesArray;
-    if (query.title) {
-        filteredResults = filteredResults.filter(notes => notes.title === query.title);
-    }
-    if (query.text) {
-        filteredResults = filteredResults.filter(notes => notes.text === query.text);
-    }
-    return filteredResults;
+  let filteredResults = notesArray;
+  if (query.title) {
+    filteredResults = filteredResults.filter(
+      (note) => note.title === query.title
+    );
+  }
+  if (query.text) {
+    filteredResults = filteredResults.filter(
+      (note) => note.text === query.text
+    );
+  }
+  return filteredResults;
 }
 
-// route to notes.json
-app.get('/api/notes', (req, res) => {
-    let results = notes;
-    if (req.query) {
-        results = filterByQuery(req.query, results);
-    }
-    console.log(req.query)
-    res.json(results);
-  });
+// filter by param
+function findById(id, notesArray) {
+  const result = notesArray.filter((note) => note.id === id)[0];
+  return result;
+}
+
+// route to notes.json through query
+app.get("/api/notes", (req, res) => {
+  let results = notes;
+  if (req.query) {
+    results = filterByQuery(req.query, results);
+  }
+  res.json(results);
+});
+
+// route to notes.json through param (id), 404 if not found
+app.get("/api/notes/:id", (req, res) => {
+  const result = findById(req.params.id, notes);
+  if (result) {
+    res.json(result);
+  } else {
+    res.status(404).send(" Note not found!");
+  }
+});
 
 // // serve to index.html
 // app.get("/", (req, res) => {
 //   res.sendFile(path.join(__dirname, ".public/index.html"));
 // });
 
-// // serve to notes.html 
+// // serve to notes.html
 // app.get("/notes", (req, res) => {
 //     res.sendFile(path.join(__dirname, ".public/notes.html"));
 //   });
