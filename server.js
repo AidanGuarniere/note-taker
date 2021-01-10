@@ -86,15 +86,15 @@ app.post("/api/notes", (req, res) => {
   }
 });
 
-// // serve to index.html
-// app.get("/", (req, res) => {
-//   res.sendFile(path.join(__dirname, ".public/index.html"));
-// });
+// serve to index.html
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, ".public/index.html"));
+});
 
-// // serve to notes.html
-// app.get("/notes", (req, res) => {
-//     res.sendFile(path.join(__dirname, ".public/notes.html"));
-//   });
+// serve to notes.html
+app.get("/notes", (req, res) => {
+    res.sendFile(path.join(__dirname, ".public/notes.html"));
+  });
 
 // listen for PORT
 app.listen(PORT, () => {
