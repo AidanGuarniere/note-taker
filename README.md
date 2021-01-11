@@ -1,6 +1,9 @@
-# note-taker
+# Note Taker
 
 Note Taker is a website that uses an Express.js server to  users to write, display, and save notes.
+
+## Deployed Website
+https://obscure-meadow-17240.herokuapp.com/
 
 ## User Story 
 GIVEN a note-taking application<br>
