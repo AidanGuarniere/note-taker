@@ -61,13 +61,11 @@ const deleteNote = (id) =>
   });
 
 const renderActiveNote = () => {
-  // hide(saveNoteBtn);
+  hide(saveNoteBtn);
 
   if (activeNote.id) {
-    noteTitle.setAttribute("readonly", true);
-    noteText.setAttribute("readonly", true);
     noteTitle.value = activeNote.title;
-    noteText.value = activeNote.title;
+    noteText.value = activeNote.text;
   } else {
     noteTitle.value = "";
     noteText.value = "";
@@ -117,7 +115,6 @@ const handleNewNoteView = (e) => {
 };
 
 const handleRenderSaveBtn = () => {
-  console.log("hello");
   if (!noteTitle.value.trim() || !noteText.value.trim()) {
     hide(saveNoteBtn);
   } else {
@@ -128,7 +125,7 @@ const handleRenderSaveBtn = () => {
 // Render the list of note titles
 const renderNoteList = async (notes) => {
   let jsonNotes = await notes.json();
-  if (window.location.pathname === "/notes") {
+  if (window.location.pathname === "/notes.html") {
     noteList.forEach((el) => (el.innerHTML = ""));
   }
 
@@ -173,7 +170,7 @@ const renderNoteList = async (notes) => {
     noteListItems.push(li);
   });
 
-  if (window.location.pathname === "/notes") {
+  if (window.location.pathname === "/notes.html") {
     noteListItems.forEach((note) => noteList[0].append(note));
   }
 };
